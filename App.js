@@ -1,14 +1,8 @@
-import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-
-/*
-
-[o] 1. Сделть верстку таймера на главной странице
-[o] 2. Сделть таймер интерактивным на главной странице
-[o] 3. Сделть таймер интерактивным на главной странице
-
-*/
+import {StatusBar} from "react-native";
+import {StyleSheet, View} from 'react-native';
+import ImageSvg from "./components/Image";
+import {SafeAreaView, SafeAreaProvider, initialWindowMetrics, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -63,20 +57,16 @@ export default class App extends React.Component {
 
     render() {
         const {hours, minutes, seconds} = this.state;
+
         return (
-            <View style={styles.container}>
-                <View style={styles.rotate}>
-                    {hours > 0 && <View style={styles.row}>
-                        <Text style={styles.text}> {hours} </Text>
-                    </View>}
-                    <View style={styles.row}>
-                        <Text style={styles.text}> {minutes} </Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.text}> {seconds} </Text>
-                    </View>
+            <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+                <View style={styles.container}>
+                    <SafeAreaView>
+                        <StatusBar hidden={true}/>
+                        <ImageSvg image={hours}/>
+                    </SafeAreaView>
                 </View>
-            </View>
+            </SafeAreaProvider>
         )
     }
 }
@@ -84,22 +74,9 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingVertical: 10,
+        backgroundColor: "red",
         justifyContent: 'center',
-        alignItems: "center",
-        flexDirection: "row",
-        backgroundColor: "#000000"
-    },
-    rotate: {
-        flexDirection: "row",
-        transform: [{rotate: '90deg'}]
-    },
-    row: {
-        flexDirection: "row",
-    },
-    text: {
-        color: "#ffffff",
-        fontSize: 300,
-        textAlign: "center",
-        letterSpacing: -50,
+        alignItems: "flex-start"
     }
 });
