@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, FlatList, StatusBar, Text, View} from "react-native";
+import {StatusBar, View} from "react-native";
 import {SafeAreaProvider, initialWindowMetrics, useSafeAreaInsets} from "react-native-safe-area-context";
 import Time from "./components/Time";
 
@@ -9,7 +9,7 @@ export default class App extends React.Component {
         this.state = {
             hours: "0",
             minutes: "0",
-            seconds: "0",
+            seconds: "00",
         }
     }
 
@@ -60,35 +60,27 @@ export default class App extends React.Component {
         }
     }
 
-    render() {
-        {
-            /*
-               Если width / 6
-               цифра = 128px;
-               цифра + двоеточик = 188 px;
-            */
-            /*
-               Если width / 3
-               цифра = 230;
-               цифра + двоеточик = 275 px;
-            */
-        }
+    countElementsLengthInTime() {
         const {hours, minutes, seconds} = this.state;
-        // const countHoursLength = +hours > 0 ? hours.toString().split('').length : 0;
-        // const countMinutesLength = minutes.toString().split('').length;
-        // const countSecondsLength = seconds.toString().split('').length;
-        // const totalTimeLength = countHoursLength + countMinutesLength + countSecondsLength;
-        // const {width, height} = Dimensions.get('window');
-        // const secondsWidth = (width / totalTimeLength) * countSecondsLength;
-        // const minutesWidth = (width / totalTimeLength) * countMinutesLength + 26;
-        // console.log(secondsWidth, minutesWidth)
+        if (+hours === 0) {
+            return minutes.toString().split('').length + seconds.toString().split('').length;
+        } else {
+            return hours.toString().split('').length + minutes.toString().split('').length + seconds.toString().split('').length;
+        }
+    }
+
+    render() {
+        const {hours, minutes, seconds} = this.state;
+        const colonQty = +hours === 0 ? 1 : 2;
+        const numberLength = this.countElementsLengthInTime();
+
         return (
             <SafeAreaProvider initialMetrics={initialWindowMetrics}>
                 <StatusBar hidden={true}/>
-                <View style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
-                    {+hours > 0 ? <Time type="hours" time={hours}/> : null}
-                    <Time type="minutes" time={minutes}/>
-                    <Time type="seconds" time={seconds}/>
+                <View style={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                    {+hours > 0 ? <Time type="hours" time={hours} colonQty={colonQty} numberLength={numberLength}/> : null}
+                    <Time type="minutes" time={minutes} colonQty={colonQty} numberLength={numberLength}/>
+                    <Time type="seconds" time={seconds} colonQty={colonQty} numberLength={numberLength}/>
                 </View>
             </SafeAreaProvider>
         )
