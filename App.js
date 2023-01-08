@@ -2,14 +2,17 @@ import React from 'react';
 import {StatusBar, View} from "react-native";
 import {SafeAreaProvider, initialWindowMetrics, useSafeAreaInsets} from "react-native-safe-area-context";
 import Time from "./components/Time";
+import Dialog from "./components/Modal";
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            hours: "0",
-            minutes: "0",
-            seconds: "00",
+            hours: "1",
+            minutes: "59",
+            seconds: "50",
+            isStarted: true,
+            isModalVisible: false
         }
     }
 
@@ -70,19 +73,30 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {hours, minutes, seconds} = this.state;
+        const {hours, minutes, seconds, isStarted, isModalVisible} = this.state;
         const colonQty = +hours === 0 ? 1 : 2;
         const numberLength = this.countElementsLengthInTime();
+        const onPress = () => {
+            this.state.isStarted ? clearInterval(this.interval) : this.interval = setInterval(() => {
+                this.timer();
+            }, 1000);
+            this.setState({isStarted: !this.state.isStarted});
+        }
+        console.log(isModalVisible)
 
         return (
-            <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-                <StatusBar hidden={true}/>
-                <View style={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                    {+hours > 0 ? <Time type="hours" time={hours} colonQty={colonQty} numberLength={numberLength}/> : null}
-                    <Time type="minutes" time={minutes} colonQty={colonQty} numberLength={numberLength}/>
-                    <Time type="seconds" time={seconds} colonQty={colonQty} numberLength={numberLength}/>
-                </View>
-            </SafeAreaProvider>
+            isModalVisible
+                ?
+                <Dialog isVisible={isModalVisible} onPress={onPress} isStarted={isStarted}/>
+                : <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+                    <StatusBar hidden={true}/>
+                    <View style={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                        {+hours > 0 ?
+                            <Time type="hours" time={hours} colonQty={colonQty} numberLength={numberLength}/> : null}
+                        <Time type="minutes" time={minutes} colonQty={colonQty} numberLength={numberLength}/>
+                        <Time type="seconds" time={seconds} colonQty={colonQty} numberLength={numberLength}/>
+                    </View>
+                </SafeAreaProvider>
         )
     }
 }
