@@ -112,11 +112,8 @@ export default class App extends React.Component {
         }
         clearInterval(this.interval);
         this.setState({
-            hours: "0", minutes: "0", seconds: "00"
+            hours: "0", minutes: "0", seconds: "00", isStarted: false
         })
-        this.interval = setInterval(() => {
-            this.timer();
-        }, 1000)
     }
 
     countElementsLengthInTime() {
