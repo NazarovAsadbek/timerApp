@@ -12,16 +12,10 @@ export default class App extends React.Component {
             hours: "0",
             minutes: "0",
             seconds: "00",
-            isStarted: true,
+            isStarted: false,
             isModalVisible: false,
             isSettingsModalVisible: false
         }
-    }
-
-    componentDidMount() {
-        this.interval = setInterval(() => {
-            this.timer();
-        }, 1000)
     }
 
     componentDidUpdate() {
