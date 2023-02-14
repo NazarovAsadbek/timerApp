@@ -1,16 +1,17 @@
 import React from 'react';
-import {StatusBar, View} from "react-native";
+import {StatusBar, View, Pressable} from "react-native";
 import {SafeAreaProvider, initialWindowMetrics, useSafeAreaInsets} from "react-native-safe-area-context";
 import Time from "./components/Time";
 import Dialog from "./components/Modal";
+import {FontAwesome} from "@expo/vector-icons";
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            hours: "1",
-            minutes: "59",
-            seconds: "50",
+            hours: "0",
+            minutes: "0",
+            seconds: "00",
             isStarted: true,
             isModalVisible: false
         }
@@ -82,21 +83,26 @@ export default class App extends React.Component {
             }, 1000);
             this.setState({isStarted: !this.state.isStarted});
         }
-        console.log(isModalVisible)
+        const onPressModal = () => {
+            this.setState({isModalVisible: !this.state.isModalVisible});
+        }
 
         return (
-            isModalVisible
-                ?
-                <Dialog isVisible={isModalVisible} onPress={onPress} isStarted={isStarted}/>
-                : <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-                    <StatusBar hidden={true}/>
+            <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+                <StatusBar hidden={true} backgroundColor={'transparent'} translucent/>
+                {isModalVisible ?
+                    <Dialog isVisible={isModalVisible} onPress={onPress} onPressModal={onPressModal} isStarted={isStarted}/>
+                    : null}
+                <Pressable style={{flex: 1}}
+                           onPress={onPressModal}>
                     <View style={{flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
                         {+hours > 0 ?
                             <Time type="hours" time={hours} colonQty={colonQty} numberLength={numberLength}/> : null}
                         <Time type="minutes" time={minutes} colonQty={colonQty} numberLength={numberLength}/>
                         <Time type="seconds" time={seconds} colonQty={colonQty} numberLength={numberLength}/>
                     </View>
-                </SafeAreaProvider>
+                </Pressable>
+            </SafeAreaProvider>
         )
     }
 }
